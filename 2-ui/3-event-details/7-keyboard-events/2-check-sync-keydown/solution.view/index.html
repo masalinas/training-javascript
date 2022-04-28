@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+
+  <p>Presione "Q" y "W" juntas (puede ser en cualquier lenguaje).</p>
+
+  <script>
+    function runOnKeys(func, ...codes) {
+      let pressed = new Set();
+
+      document.addEventListener('keydown', function(event) {
+        pressed.add(event.code);
+
+        for (let code of codes) { // ¿están todas las teclas en el set?
+          if (!pressed.has(code)) {
+            return;
+          }
+        }
+
+        // sí, lo están
+
+        // durante el alert, si el visitante suelta las teclas,
+        // JavaScript no obtiene el evento "keyup"
+        // y el set "pressed" las mantendrá asumiendo que las teclas siguen presionadas;
+        // por ello, para evitar teclas "pegadas", reseteamos el estado
+        // si el usuario quiere usa el atajo de nuevo, permitámoslo
+        pressed.clear();
+
+        func();
+      });
+
+      document.addEventListener('keyup', function(event) {
+        pressed.delete(event.code);
+      });
+
+    }
+
+    runOnKeys(
+      () => alert("Hello!"),
+      "KeyQ",
+      "KeyW"
+    );
+  </script>
+
+</body>
+
+</html>
